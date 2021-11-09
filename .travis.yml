@@ -2,10 +2,20 @@ sudo: required
 services:
   - docker
 
+language: generic 
+
 before_install:
   - docker build -t skrill0/docker-react -f Dockerfile.dev .
 
 script:
   - docker run -e CI=true skrill0/docker-react npm run test -- --coverage
 
-language: generic 
+deploy:
+  provider: elasticbeanstalk
+  region: "ap-southeast-1"
+  app: "docker-react"
+  env: "Dockerreact-env"
+  bucket_name: "elasticbeanstalk-ap-southeast-1-431443881244"
+  bucket_path: "docker-react"
+  on:
+    branch: main
